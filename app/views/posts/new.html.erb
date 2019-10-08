@@ -1,0 +1,35 @@
+<head>
+  <!-- fontawsomeのコード -->
+  <script src="https://kit.fontawesome.com/f0d31dc058.js" crossorigin="anonymous"></script>
+</head>
+<!-- 新規投稿ページ -->
+<section class="page-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading text-uppercase">お気に入りの日用品をシェアしよう！</h2>
+      </div>
+    </div>
+  </div>
+  <%= form_tag("/posts/create", {multipart: true}) do %>
+  <div class="form">
+      <div class="form-body">
+        <% @post.errors.full_messages.each do |message| %>
+          <div class="alert alert-primary" role="alert">
+            <%= message %>
+          </div>
+        <% end %>
+        <p class="section-subheading text-muted">商品名
+        <input name="product_name" value="<%= @post.product_name %>">
+        </p>
+        <p class="section-subheading text-muted">商品画像
+          <input name="image" type="file">
+        </p>
+        <p class="section-subheading text-muted">商品詳細情報
+        <textarea name="content"><%= @post.content %></textarea>
+        </p>
+        <input type="submit" value="投稿">
+      </div>
+  </div>
+  <% end %>
+</section>

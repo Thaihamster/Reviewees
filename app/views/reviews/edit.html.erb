@@ -1,0 +1,29 @@
+<head>
+  <!-- fontawsomeのコード -->
+  <script src="https://kit.fontawesome.com/f0d31dc058.js" crossorigin="anonymous"></script>
+</head>
+<!-- レビュー編集ページ -->
+<section class="page-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading text-uppercase"><%= @post.product_name %>の口コミを編集する</h2>
+      </div>
+    </div>
+  </div>
+  <%= form_tag("/reviews/#{@post.id}/#{@review.id}/update") do %>
+  <div class="form">
+      <div class="form-body">
+        <% @review.errors.full_messages.each do |message| %>
+          <div class="alert alert-primary" role="alert">
+            <%= message %>
+          </div>
+        <% end %>
+        <p class="section-subheading text-muted">
+        <textarea name="content"><%= @review.content %></textarea>
+        </p>
+        <input type="submit" value="投稿">
+      </div>
+  </div>
+  <% end %>
+</section>

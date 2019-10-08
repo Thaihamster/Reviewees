@@ -1,0 +1,37 @@
+<head>
+  <!-- fontawsomeのコード -->
+  <script src="https://kit.fontawesome.com/f0d31dc058.js" crossorigin="anonymous"></script>
+</head>
+<!-- ユーザー編集ページ -->
+<section class="page-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading text-uppercase">登録情報を変更する</h2>
+      </div>
+    </div>
+
+
+    <%= form_tag("/users/#{@user.id}/update", {multipart: true}) do %>
+    <div class="form">
+        <div class="form-body">
+          <% @user.errors.full_messages.each do |message| %>
+            <div class="alert alert-primary" role="alert">
+              <%= message %>
+            </div>
+          <% end %>
+          <p class="section-subheading text-muted">ユーザー名
+            <input name="name" value="<%= @user.name %>">
+          </p>
+          <p class="section-subheading text-muted">ユーザー画像
+            <input name="image" type="file">
+          </p>
+          <p class="section-subheading text-muted">メールアドレス
+            <input name="email" value="<%= @user.email %>">
+          </p>
+          <input type="submit" value="登録">
+        </div>
+    </div>
+    <% end %>
+  </div>
+</section>

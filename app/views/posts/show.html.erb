@@ -1,0 +1,76 @@
+<head>
+  <!-- fontawsomeのコード -->
+  <script src="https://kit.fontawesome.com/f0d31dc058.js" crossorigin="anonymous"></script>
+</head>
+<!-- 投稿詳細ページ -->
+<section class="bg-light page-section" id="portfolio">
+    <div class="container">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading text-uppercase"><%= @post.product_name %>の詳細ページ</h2>
+      </div>
+    </div>
+
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-md-7  portfolio-item">
+            <div class="posts-show-image">
+              <img class="rounded-circle img-fluid" src="<%= "/posts_images/#{@post.image_name}" %>" alt="">
+            </div>
+            <p class="post-content"><%= @post.content %></p>
+            <!-- ライクボタン -->
+            <div class="like-unlike">
+              <% if Like.find_by(user_id: @current_user.id, post_id: @post.id) %>
+                <%= link_to("/likes/#{@post.id}/destroy", {method: "post"}) do %>
+                  <i class="fas fa-heart fa-lg like-btn-unlike"></i>
+                <% end %>
+              <% else %>
+                <%= link_to("/likes/#{@post.id}/create", {method: "post"}) do %>
+                  <i class="fas fa-heart fa-lg like-btn"></i>
+                <% end %>
+              <% end %>
+              <%= @likes_count %>
+            </div>
+            <!-- 日用品投稿編集/削除ボタン -->
+              <% if @post.user_id == @current_user.id %>
+                <div class="post-menus">
+                  <%= link_to("/posts/#{@post.id}/edit") do %>
+                  <p class="btn btn-primary btn-x2 text-uppercase js-scroll-trigger">編集</p>
+                  <% end %>
+                  <%= link_to("/posts/#{@post.id}/destroy", {method: "post"}) do %>
+                  <p class="btn btn-primary btn-x2 text-uppercase js-scroll-trigger">削除</p>
+                  <% end %>
+                </div>
+              <% end %>
+          </div>
+
+          <div class="col-md-5">
+              <h2 class="section-subheading text-muted">口コミまとめ</h2>
+                <% @reviews.each do |review| %>
+                  <% post = Post.find_by(id: review.post_id) %>
+                  <% user = User.find_by(id: review.user_id) %>
+                      <div class="posts-index-item">
+                        <div class="post-left">
+                          <%= link_to("/users/#{user.id}") do %>
+                            <img class="rounded-circle img-fluid" src="<%= "/user_images/#{user.image_name}" %>">
+                          <% end %>
+                        </div>
+                        <div class="post-right">
+                          <div class="post-user-name">
+                            <%= link_to(user.name, "/users/#{review.user_id}") %>
+                          </div>
+                          <%= review.content %>
+                        </div>
+                        <% if review.user_id == @current_user.id %>
+                        <div class="post-menus">
+                          <%= link_to("編集", "/reviews/#{@post.id}/#{review.id}/edit") %>
+                          <%= link_to("削除", "/reviews/#{@post.id}/#{review.id}/destroy", {method: "post"}) %>
+                        </div>
+                        <% end %>
+                      </div>
+                <% end %>
+                <%= link_to("/reviews/#{@post.id}/new") do %>
+                  <p class="btn btn-primary btn-x2 text-uppercase js-scroll-trigger">レビューを書く</p>
+                <% end %>
+          </div>
+      </div>
+</section>
