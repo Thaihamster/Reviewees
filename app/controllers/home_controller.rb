@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  bofore_action :forbid_login_user, {only: [:index]}
+  before_action :forbid_login_user, {only: [:index]}
 
   def index
   end
