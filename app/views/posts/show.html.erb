@@ -1,6 +1,10 @@
 <head>
   <!-- fontawsomeのコード -->
   <script src="https://kit.fontawesome.com/f0d31dc058.js" crossorigin="anonymous"></script>
+  <!-- jQueryのコード -->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <!-- ratyのコード -->
+  <%= javascript_pack_tag 'jquery' %>
 </head>
 <!-- 投稿詳細ページ -->
 <section class="bg-light page-section" id="portfolio">
@@ -12,11 +16,17 @@
 
       <div class="container">
         <div class="row text-center">
-          <div class="col-md-7  portfolio-item">
+          <div class="col-md-7">
             <div class="posts-show-image">
               <img class="rounded-circle img-fluid" src="<%= "/posts_images/#{@post.image_name}" %>" alt="">
             </div>
-            <p class="post-content"><%= @post.content %></p>
+            <div class="product-info">
+              <h4 class="section-subheading text-muted">詳細情報</h4>
+            </div>
+            <div class="post-content">
+              <p><%= @post.content %></p>
+            </div>
+
             <!-- ライクボタン -->
             <div class="like-unlike">
               <% if Like.find_by(user_id: @current_user.id, post_id: @post.id) %>
@@ -30,6 +40,14 @@
               <% end %>
               <%= @likes_count %>
             </div>
+
+            <!-- 評価の平均 & 評価数 -->
+            <div class="average-rating">
+              <div class="star-rating" data-score= <%= @avg_review %> ></div>
+              <em><%= "この商品のレビュー数 #{@reviews.length}" %></em>
+            </div>
+
+
             <!-- 日用品投稿編集/削除ボタン -->
               <% if @post.user_id == @current_user.id %>
                 <div class="post-menus">
@@ -43,8 +61,9 @@
               <% end %>
           </div>
 
+          <!-- 口コミ一覧 -->
           <div class="col-md-5">
-              <h2 class="section-subheading text-muted">口コミまとめ</h2>
+              <h4 class="section-subheading text-muted">口コミ一覧</h4>
                 <% @reviews.each do |review| %>
                   <% post = Post.find_by(id: review.post_id) %>
                   <% user = User.find_by(id: review.user_id) %>
@@ -57,20 +76,43 @@
                         <div class="post-right">
                           <div class="post-user-name">
                             <%= link_to(user.name, "/users/#{review.user_id}") %>
+                            <div class="post-rating">
+                              <div class="star-rating" data-score= <%= review.rating %> ></div>
+                            </div>
                           </div>
                           <%= review.content %>
+                          <p class="text-muted"><%= review.created_at.strftime('%Y/%m/%d') %></p>
                         </div>
                         <% if review.user_id == @current_user.id %>
                         <div class="post-menus">
-                          <%= link_to("編集", "/reviews/#{@post.id}/#{review.id}/edit") %>
-                          <%= link_to("削除", "/reviews/#{@post.id}/#{review.id}/destroy", {method: "post"}) %>
+                          <div data-turbolinks="false">
+                            <%= link_to("/reviews/#{@post.id}/#{review.id}/edit") do %>
+                              <p class="btn btn-primary btn-sm text-uppercase js-scroll-trigger">編集</p>
+                            <% end %>
+
+                            <%= link_to("/reviews/#{@post.id}/#{review.id}/destroy", {method: "post"}) do %>
+                              <p class="btn btn-primary btn-sm text-uppercase js-scroll-trigger">削除</p>
+                            <% end %>
+                          </div>
                         </div>
                         <% end %>
                       </div>
                 <% end %>
-                <%= link_to("/reviews/#{@post.id}/new") do %>
-                  <p class="btn btn-primary btn-x2 text-uppercase js-scroll-trigger">レビューを書く</p>
-                <% end %>
+                <div data-turbolinks="false">
+                  <%= link_to("/reviews/#{@post.id}/new") do %>
+                    <p class="btn btn-primary btn-x2 text-uppercase js-scroll-trigger">レビューを書く</p>
+                  <% end %>
+                </div>
           </div>
       </div>
 </section>
+<!-- 評価のjavascript -->
+<script>
+    $('.star-rating').raty({
+      path: '/assets/',
+      readOnly: true,
+      score: function() {
+            return $(this).attr('data-score');
+    }
+  });
+</script>

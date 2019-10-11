@@ -1,8 +1,12 @@
 <head>
   <!-- fontawsomeのコード -->
   <script src="https://kit.fontawesome.com/f0d31dc058.js" crossorigin="anonymous"></script>
+  <!-- jQueryのコード -->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <!-- ratyのコード -->
+  <%= javascript_pack_tag 'jquery' %>
 </head>
-<!-- レビュー編集ページ -->
+<!-- 口コミ編集ページ -->
 <section class="page-section">
   <div class="container">
     <div class="row">
@@ -19,6 +23,12 @@
             <%= message %>
           </div>
         <% end %>
+        <!-- 評価のHTML -->
+        <h5 class="section-subheading">評価
+        <div id="star-rating"></div>
+        <input id="score" name="rating" type="hidden"></h5>
+
+
         <p class="section-subheading text-muted">
         <textarea name="content"><%= @review.content %></textarea>
         </p>
@@ -27,3 +37,12 @@
   </div>
   <% end %>
 </section>
+<!-- 評価のjavascript -->
+<script>
+  $('#star-rating').raty({
+    path: '/assets/',
+    target:     '#score',
+    targetKeep: true,
+    targetType: 'number',
+  });
+</script>

@@ -9,9 +9,14 @@ class PostsController < ApplicationController
   def show
     @id = params[:id]
     @post = Post.find_by(id: params[:id])
-    @reviews = Review.where(post_id: @post.id).order(created_at: :desc)
-    @review = Review.find_by(post_id: @post.id)
+    @review = Review.find_by(post_id: @post.id, rating: params[:rating])
     @likes_count = Like.where(post_id: @post.id).count
+    @reviews = Review.where(post_id: @post.id).order(created_at: :desc)
+    if @reviews.blank?
+      @avg_review = 0
+    else
+      @avg_review = @reviews.average(:rating).round(2)
+    end
   end
 
   def new

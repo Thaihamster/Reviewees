@@ -12,12 +12,14 @@
     </div>
     <div class="row">
       <% @users.each do |user| %>
-        <div class="col-sm-4">
-          <div class="team-member">
-          <a class="portfolio-link" data-toggle="modal" href="/users/<%= user.id %>">
-            <img class="mx-auto rounded-circle" src="<%= "/user_images/#{user.image_name}" %>" alt="">
-          </a>
+        <div class="col-sm-3">
+          <div data-turbolinks="false">
+            <div class="team-member">
+              <a class="portfolio-link" data-toggle="modal" href="/users/<%= user.id %>">
+                <img class="mx-auto rounded-circle" src="<%= "/user_images/#{user.image_name}" %>" alt="">
+              </a>
             <h4><%= user.name %></h4>
+            </div>
           </div>
         </div>
       <% end %>

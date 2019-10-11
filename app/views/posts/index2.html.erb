@@ -1,20 +1,25 @@
 <head>
   <!-- fontawsomeのコード -->
   <script src="https://kit.fontawesome.com/f0d31dc058.js" crossorigin="anonymous"></script>
+  <!-- jQueryのコード -->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <!-- ratyのコード -->
+  <%= javascript_pack_tag 'jquery' %>
 </head>
 <!-- 投稿一覧ページ -->
 <section class="bg-light page-section" id="portfolio">
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <h2 class="section-heading text-uppercase">みんなの投稿一覧</h2>
+        <h2 class="section-heading text-uppercase">日用品一覧</h2>
       </div>
     </div>
       <div class="clearfix">
         <div class="row mx-auto">
           <% @posts.each do |post| %>
             <div class="col-md-3 col-sm-6 portfolio-item">
-              <a class="portfolio-link" data-toggle="modal" href="/posts/<%= post.id %>">
+              <div data-turbolinks="false">
+                <a class="portfolio-link" data-toggle="modal" href="/posts/<%= post.id %>">
                 <div class="portfolio-hover">
                   <div class="portfolio-hover-content">
                     <i class="fas fa-plus fa-3x"></i>
@@ -22,16 +27,40 @@
                 </div>
                 <img class="img-fluid" src="<%= "/posts_images/#{post.image_name}" %>" alt="">
               </a>
+            </div>
             <div class="portfolio-caption">
               <h4><%= post.product_name %></h4>
             </div>
+
+            <!-- ライク数 -->
+            <div class="counts2">
+              <% likes_count = Like.where(post_id: post.id).count %>
+              <% if Like.find_by(user_id: @current_user.id, post_id: post.id) %>
+                <%= link_to("/likes/#{post.id}/destroy", {method: "post"}) do %>
+                  <i class="fas fa-heart fa-lg like-btn-unlike"></i>
+                <% end %>
+              <% else %>
+                <%= link_to("/likes/#{post.id}/create", {method: "post"}) do %>
+                  <i class="fas fa-heart fa-lg like-btn"></i>
+                <% end %>
+              <% end %>
+              <%= @likes_count %>
+            </div>
+
+            <!-- 評価の平均 -->
+            <div class="post2-rating">
+              <% reviews = Review.where(post_id: post.id) %>
+              <% avg_review = reviews.average(:rating) %>
+              <div class="star-rating" data-score="<%= avg_review %>"></div>
+            </div>
+
+            <!-- コメント数 -->
             <div class="counts">
-              <!-- コメント数を表示させるための変数 -->
               <% reviews_count = Review.where(post_id: post.id).count %>
-              <!-- 終わり -->
+
               <%= link_to(reviews_count, "/posts/#{post.id}") %>
               <%= link_to("/posts/#{post.id}") do %>
-                <span class="far fa-comment-dots fa-lg"></span>
+                <span class="far fa-comment-dots fa-lg" style="padding-top: 6px;"></span>
               <% end %>
             </div>
           </div>
@@ -40,3 +69,13 @@
     </div>
   </div>
 </section>
+<!-- 評価のjavascript -->
+<script>
+    $('.star-rating').raty({
+      path: '/assets/',
+      readOnly: true,
+      score: function() {
+            return $(this).attr('data-score');
+    }
+  });
+</script>

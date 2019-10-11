@@ -1,6 +1,11 @@
 <head>
   <!-- fontawsomeのコード -->
   <script src="https://kit.fontawesome.com/f0d31dc058.js" crossorigin="anonymous"></script>
+  <!-- jQueryのコード -->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <!-- ratyのコード -->
+  <%= javascript_pack_tag 'jquery' %>
+  <!-- ユーザー詳細ページ用のCSS -->
   <link href="/users.scss" rel="stylesheets">
 </head>
 <!-- ユーザー一覧の詳細ページ -->
@@ -44,6 +49,12 @@
                             <p><%= @user.name %>/<%= link_to(post.product_name, "/posts/#{review.post_id}") %></p>
                           </div>
                             <p><%= link_to(review.content, "/posts/#{review.post_id}") %></p>
+                          <div class="show-user-date">
+                            <p class="text-muted"><%= review.created_at.strftime('%Y/%m/%d') %></p>
+                          </div>
+                          <div class="show-rating">
+                            <div class="star-rating" data-score= <%= review.rating %> ></div>
+                          </div>
                         </div>
                       </div>
                     <% end %>
@@ -67,3 +78,13 @@
         </div>
       </div>
 </section>
+<!-- 評価のjavascript -->
+<script>
+    $('.star-rating').raty({
+      path: '/assets/',
+      readOnly: true,
+      score: function() {
+            return $(this).attr('data-score');
+    }
+  });
+</script>

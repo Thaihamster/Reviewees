@@ -15,7 +15,9 @@ class ReviewsController < ApplicationController
       user_id: @current_user.id,
       post_id: params[:post_id],
       content: params[:content],
+      rating: params[:rating]
     )
+    @post = Post.find_by(id: params[:post_id])
     if @review.save
       flash[:notice] = "口コミを投稿しました！"
       redirect_to("/posts/#{params[:post_id]}")
@@ -32,6 +34,7 @@ class ReviewsController < ApplicationController
   def update
     @review = Review.find_by(id: params[:id])
     @review.content = params[:content]
+    @review.rating = params[:rating]
     @post = Post.find_by(id: params[:post_id])
     if @review.save
       flash[:notice] = "口コミを編集しました！"

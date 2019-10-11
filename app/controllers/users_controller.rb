@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     @user = User.new(
       name: params[:name],
       email: params[:email],
-      image_name: "m_e_others_500.jpg",
+      image_name: "human2.jpg",
       password: params[:password])
     if params[:image]
       @user.image_name = "#{@user.id}.jpg"
